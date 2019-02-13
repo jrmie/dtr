@@ -1,0 +1,7 @@
+.Rhistory
+.Rprofile
+.Rproj.user
+.RData
+.Ruserdata
+.DS_Store
+packrat/
