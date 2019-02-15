@@ -5,3 +5,5 @@
 .Ruserdata
 .DS_Store
 packrat/
+packrat/lib*/
+packrat/src/
