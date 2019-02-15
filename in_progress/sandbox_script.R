@@ -18,29 +18,59 @@ head(mpg) %>%
                               "salut" = 1, "salut" = 1))
 
 
+test %>%
+  dt_create(group = "manufacturer", spec.var = list(cyl = list(name = "helloworld"))) %>%
+  dt_to_flextable() %>%
+  dt_save(file = salut)
+
+attr(test2, "format")
+
 print_align(test2)
 
 
 test2 <- epitable(test, group = "cyl")
 
 
-align <- print_align(test2)
+test <- epitable_to_word(test2)
+epitable_to_html(test2) %>% attr("format")
+epitable_to_latex(test2) %>% attr("format")
+
 ft
 ft %>% align(j = 1, align = "left")
 
+
+test$
+
+x <- test2
+
+
+h_cell <- officer::fp_cell(border.bottom = o_border, margin.left = 1, margin.right = 1)
+h_text <-
+
+
+################
+o_border <- officer::fp_border()
+
 header_df <- tibble(col_keys = names(test2$table),
                     name = rep(names(print_header(test2)), print_header(test2)))
+
+align <- print_align(test2)
+
+indent = which(!test2$table$variable %in% test2$options$var.names$name)
+
 ft <- flextable::flextable(test2$table) %>%
+  border_remove() %>%
   set_header_df(header_df) %>%
-  merge_h(part = "header")
+  merge_h(part = "header") %>%
+  hline_bottom(border = o_border, part = "all") %>%
+  hline_top(border = o_border, part = "header")
 
 ft <- reduce2(
-  .x = print_header_align(test2),
-  .y = names(print_header_align(test2)),
+  .x = 1:ncol(test2$table),
+  .y = print_header_align(test2),
   .f = function(value, arg1, arg2){align(value, j = arg1, align = arg2, part = "header")},
   .init = ft
 )
-
 
 #align
 ft <- reduce2(
@@ -56,27 +86,19 @@ ft <- reduce2(
   .init = ft
      )
 
-ft %>% set_header_df(tibble(col_keys = names(test2$table), name = rep(names(print_header(test2)),
-                                                               print_header(test2)))) %>%
-  merge_h(part = "header")
+# auto width
+ft <- autofit(ft)
 
-ft %>% set_header_labels(values = set_names(rep(names(print_header(test2)),
-                                                print_header(test2)),
-                                            names(test2$table))) %>%
-  merge_h(i = 1, part = "header")
+# bold header
+ft <- flextable::bold(ft, part = "header")
 
-set_head
+# indent
+ft %>% flextable::padding(i = indent, j = 1, padding.left = 25) %>%
+  italic(i = indent, j = 1)
 
-flextable::head
-print_header(test2) %>% names()
-ft %>% merge_at(i = 2:3, j = 1, part = "header")
-set_names(rep(names(print_header(test2)),
-              print_header(test2)),
-          names(test2$table))
+################
 
-print_header_align(test2)
 
-case
 doc <- read_docx()
 doc <- body_add_flextable(doc, value = ft)
 print(doc, target = "test.docx")

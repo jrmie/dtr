@@ -21,4 +21,14 @@ print_header <- function(x){
   return(header)
 }
 
-
+# Set the alignement to the header
+print_header_align <- function(x){
+  align <- c("left", rep("center", 2*length(x$options$grp_levels)))
+  if(x$options$overall){
+    align <- c(align, rep("center", 2))
+  }
+  if(x$options$compare){
+    align <- c(align, "right")
+  }
+  return(align)
+}
