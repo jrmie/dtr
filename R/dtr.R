@@ -35,6 +35,10 @@ dt_create <- function(data,
                       overall = F){
 
 
+  # NSE Tidyeval ------------
+
+  group <- rlang::ensym(group)
+
   # Check data --------------
 
   # check classes of variables
@@ -44,11 +48,6 @@ dt_create <- function(data,
     }
   }
 
-  # check argument group
-  if (!is.character(group)){
-    stop("The argument 'group' must be a character name variable")
-  }
-
   # check argument stat.num
   if (!(stat.num %in% c("median", "mean"))){
     stop("The argument 'stat.num' must be 'median' or 'mean'")
@@ -56,9 +55,6 @@ dt_create <- function(data,
 
 
   # Tidy the data -----------
-
-  # use a NSE tidyeval
-  group <- sym(group)
 
   # handle missing group variable or not
   if (keep.missing){
