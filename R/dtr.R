@@ -86,6 +86,8 @@ dt_create <- function(data,
     list_compare <- list(fct = compare_factor(data, group, var.fct),
                          num = compare_numeric(data, group, grp_levels, var.num)
     )
+  } else {
+    list_compare <- NULL
   }
 
 
