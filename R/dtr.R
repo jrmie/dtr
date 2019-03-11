@@ -17,20 +17,20 @@ NULL
 #'
 #' @param data A data frame which contains only factor or numeric variables.
 #' @param group Characters. A grouping variable name.
-#' @param stat.num Characters. Specify which statistics should be provide.
+#' @param stat_num Characters. Specify which statistics should be provide.
 #' @param digits Integer. Specify the number of digits to display.
-#' @param keep.missing A T/F value. Indicate if statistics should be provide for cases with missing grouping variable.
+#' @param keep_missing A T/F value. Indicate if statistics should be provide for cases with missing grouping variable.
 #' @param compare A T/F value. Indicate if a statistical comparison should be added.
 #' @param overall A T/F value. Indicate if statistics should be provide for the entire dataset.
-#' @param spec.var A list. Named list of the variables for which it specifies name and digits to display.
+#' @param spec_var A list. Named list of the variables for which it specifies name and digits to display.
 #' @return An epitable object
 
 dt_create <- function(data,
                       group,
-                      stat.num = "median",
+                      stat_num = "median",
                       digits = 2,
-                      spec.var = NULL,
-                      keep.missing = F,
+                      spec_var = NULL,
+                      keep_missing = F,
                       compare = T,
                       overall = F){
 
@@ -48,16 +48,16 @@ dt_create <- function(data,
     }
   }
 
-  # check argument stat.num
-  if (!(stat.num %in% c("median", "mean"))){
-    stop("The argument 'stat.num' must be 'median' or 'mean'")
+  # check argument stat_num
+  if (!(stat_num %in% c("median", "mean"))){
+    stop("The argument 'stat_num' must be 'median' or 'mean'")
   }
 
 
   # Tidy the data -----------
 
   # handle missing group variable or not
-  if (keep.missing){
+  if (keep_missing){
     data <- data %>%
       mutate(!!group := fct_explicit_na(!!group, na_level = "Missing data"))
   } else {
@@ -70,21 +70,21 @@ dt_create <- function(data,
   grp_levels <- levels(data[[group_vars(data)]])
 
   # set vector of names of numerics and factor variables
-  var.num <- data %>% select_if(is.numeric) %>% tbl_nongroup_vars()
-  var.fct <- data %>% select_if(is.factor) %>% tbl_nongroup_vars()
+  var_num <- data %>% select_if(is.numeric) %>% tbl_nongroup_vars()
+  var_fct <- data %>% select_if(is.factor) %>% tbl_nongroup_vars()
 
 
   # Describes the data ------
 
   # summarises numerics and factor
-  df_raw <- list(numeric = describe_numeric(data, group, stat.num),
+  df_raw <- list(numeric = describe_numeric(data, group, stat_num),
                  factor = describe_factor(data, group))
 
 
   # Compare the data --------
   if(compare){
-    list_compare <- list(fct = compare_factor(data, group, var.fct),
-                         num = compare_numeric(data, group, grp_levels, var.num)
+    list_compare <- list(fct = compare_factor(data, group, var_fct),
+                         num = compare_numeric(data, group, grp_levels, var_num)
     )
   } else {
     list_compare <- NULL
@@ -93,8 +93,8 @@ dt_create <- function(data,
 
   # Set how to display ------
 
-  tbl_num <- display_numeric(df_raw$numeric, group, grp_levels, var.num, stat.num, spec.var, digits)
-  tbl_fct <- display_factor(df_raw$factor, grp_levels, var.fct)
+  tbl_num <- display_numeric(df_raw$numeric, group, grp_levels, var_num, stat_num, spec_var, digits)
+  tbl_fct <- display_factor(df_raw$factor, grp_levels, var_fct)
   tbl <- bind_rows(tbl_num, tbl_fct)
 
   # add a pvalue column
@@ -104,16 +104,16 @@ dt_create <- function(data,
   }
 
   # set orders of column and rows
-  order <- display_order(data, grp_levels, var.fct, spec.var, compare)
+  order <- display_order(data, grp_levels, var_fct, spec_var, compare)
   tbl <- tbl %>%
     select(order$cols) %>%
     arrange(match(variable, order$rows))
 
   # set var names
-  var.names <- display_names(var.num, var.fct, spec.var)
+  var_names <- display_names(var_num, var_fct, spec_var)
   tbl <- tbl %>%
-    mutate(variable = ifelse(variable %in% var.names$variable,
-                             var.names$name[match(variable, var.names$variable)],
+    mutate(variable = ifelse(variable %in% var_names$variable,
+                             var_names$name[match(variable, var_names$variable)],
                              variable)
     )
 
@@ -124,11 +124,11 @@ dt_create <- function(data,
               options = list(data = data,
                              group = group,
                              grp_levels = grp_levels,
-                             stat.num = stat.num,
+                             stat_num = stat_num,
                              digits = digits,
-                             spec.var = spec.var,
-                             var.names = var.names,
-                             keep.missing = keep.missing,
+                             spec_var = spec_var,
+                             var_names = var_names,
+                             keep_missing = keep_missing,
                              compare = compare,
                              overall = overall)
   )

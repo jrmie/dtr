@@ -14,7 +14,7 @@
 dt_to_latex <- function(x, title = NULL, font_size = NULL){
 
   align = print_align(x)
-  indent = which(!x$table$variable %in% x$options$var.names$name)
+  indent = which(!x$table$variable %in% x$options$var_names$name)
   header = print_header(x)
 
   # use kable and kableExtra
@@ -47,7 +47,7 @@ dt_to_latex <- function(x, title = NULL, font_size = NULL){
 dt_to_html <- function(x, title = NULL, font_size = NULL){
 
   align = print_align(x)
-  indent = which(!x$table$variable %in% x$options$var.names$name)
+  indent = which(!x$table$variable %in% x$options$var_names$name)
   header = print_header(x)
 
   # use knitr and kableExtra to make the table
@@ -108,7 +108,7 @@ dt_to_flextable <- function(x, title = NULL, font_size = NULL){
   # vector of alignement
   align = print_align(x)
   # select rows to indent
-  indent = which(!x$table$variable %in% x$options$var.names$name)
+  indent = which(!x$table$variable %in% x$options$var_names$name)
   header_df <- tibble::tibble(col_keys = names(x$table),
                       name = rep(names(print_header(x)), print_header(x)))
 

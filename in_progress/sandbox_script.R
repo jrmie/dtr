@@ -19,7 +19,7 @@ head(mpg) %>%
 
 
 test %>%
-  dt_create(group = manufacturer, spec.var = list(cyl = list(name = "helloworld"))) %>%
+  dt_create(group = manufacturer, spec_var = list(cyl = list(name = "helloworld"))) %>%
   dt_to_flextable()
 
 test %>%
