@@ -7,6 +7,7 @@
 #' @import tidyr
 #' @import kableExtra
 #' @import rlang
+#' @import purrr
 #' @export dt_create
 #' @export dt_to_html
 #' @export dt_to_latex
@@ -58,18 +59,16 @@ dt_create <- function(data,
 
   # handle missing group variable or not
   if (keep_missing){
-    data <- data %>%
-      mutate(!!group := fct_explicit_na(!!group, na_level = "Missing data"))
+    data <- mutate(data, !!group := fct_explicit_na(!!group, na_level = "Missing data"))
   } else {
-    data <- data %>%
-      filter(!is.na(!!group))
+    data <- filter(data, !is.na(!!group))
   }
 
   # groups the data and set a vector of levels
   data <- group_by(data, !!group)
-  grp_levels <- levels(data[[group_vars(data)]])
+  grp_levels <- levels(pull(data, !!group))
 
-  # set vector of names of numerics and factor variables
+  # set vector names of numerics and factor variables
   var_num <- data %>% select_if(is.numeric) %>% tbl_nongroup_vars()
   var_fct <- data %>% select_if(is.factor) %>% tbl_nongroup_vars()
 
@@ -77,8 +76,8 @@ dt_create <- function(data,
   # Describes the data ------
 
   # summarises numerics and factor
-  df_raw <- list(numeric = describe_numeric(data, group, stat_num),
-                 factor = describe_factor(data, group))
+  df_raw <- list(numeric = describe_numeric(data, var_num, stat_num),
+                 factor = describe_factor(data, var_fct))
 
 
   # Compare the data --------

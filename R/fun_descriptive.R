@@ -2,22 +2,23 @@
 # Descriptive functions
 
 # to describe numeric variables
-describe_numeric <- function(x, group, stat_num){
+describe_numeric <- function(data, var_num, stat_num){
 
-  #select
-  df <- x %>% select_if(is.numeric)
+  df <- select(data, var_num, group_cols())
+  print(is.grouped_df(df))
+  group <- sym(group_vars(data))
 
   #summarise
   if(stat_num == "median"){
-    df <- bind_rows(median = df %>% summarise_all(median, na.rm = T),
-                             q1 = df %>% summarise_all(quantile, probs = .25, na.rm = T),
-                             q3 = df %>% summarise_all(quantile, probs = .75, na.rm = T),
-                             .id = "stat")
+    df <- bind_rows(median = summarise_all(df, median, na.rm = T),
+                    q1 = summarise_all(df, quantile, probs = .25, na.rm = T),
+                    q3 = summarise_all(df, quantile, probs = .75, na.rm = T),
+                    .id = "stat")
   }
   if(stat_num == "mean"){
-    df <- bind_rows(mean = df %>% summarise_all(mean, na.rm = T),
-                             sd = df %>% summarise_all(sd, na.rm = T),
-                             .id = "stat")
+    df <- bind_rows(mean = summarise_all(df, mean, na.rm = T),
+                    sd = summarise_all(df, sd, na.rm = T),
+                    .id = "stat")
   }
 
   #rename
@@ -29,10 +30,10 @@ describe_numeric <- function(x, group, stat_num){
 }
 
 # to describe factor variables
-describe_factor <- function(x, group){
+describe_factor <- function(data, var_fct){
 
-  #select
-  df <- x %>% select_if(is.factor)
+  df <- select(data, var_fct, group_cols())
+  group <- sym(group_vars(data))
 
   #summarise
   df <- map_dfr(
@@ -44,9 +45,10 @@ describe_factor <- function(x, group){
         group_by(variable, add = T) %>%
         count() %>%
         spread(!!group, n) %>%
-        mutate_all(~replace_na(.x, 0)) %>%
+        mutate_at(vars(-group_cols()), ~replace_na(.x, 0)) %>%
         ungroup() %>%
-        mutate_if(is.numeric, funs(p = ./sum(., na.rm = T)))
+        mutate_if(is.numeric, list(p = ~./sum(., na.rm = T))) %>%
+        mutate_at(vars(variable), as.character)
     })
 
   return(df)
