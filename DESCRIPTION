@@ -1,11 +1,11 @@
 Package: dtr
 Type: Package
-Title: Descriptive Tables in the Field of Epidemiology
+Title: Descriptive Tables with R in the Field of Epidemiology
 Version: 0.0.0.9000
-Author@R: as.person("Jeremie Lespinasse <jeremie.lespinasse@outlook.com> [aut, cre]")
+Author@R: as.person(c("Jeremie Lespinasse <jeremie.lespinasse@outlook.com> [aut, cre]"))
 Description: A tool to easily inspect data and produce report tables. It provides several
     descriptive statistics for the entire dataset or groups. Statistical comparisons
-    either paramatric or not between groups can be added. It provides choices
+    either paramatric or not can be added between groups. It provides choices
     to render table in html/pdf within knitr and kableExtra packages or word
     document with flextable package.
 License: MIT + file
@@ -13,5 +13,9 @@ Encoding: UTF-8
 LazyData: true
 Imports:
     tidyr,
+    purrr,
+    rlang,
     kableExtra
 RoxygenNote: 6.1.1
+Suggests: 
+    testthat

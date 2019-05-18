@@ -19,8 +19,18 @@ head(mpg) %>%
 
 
 test %>%
-  dt_create(group = manufacturer, spec_var = list(cyl = list(name = "helloworld"))) %>%
-  dt_to_flextable()
+  dt_create(group = manufacturer, spec_var = list(cyl = list(name = "cylinder"), hwy = list(name = "highwaytohell"))) %>%
+  dt_to_html()
+
+q <- chisq.test(test$manufacturer, test$cyl)
+class(q)
+typeof(q)
+
+print(b$compare$fct$test)
+
+
+#%>%
+ # dt_to_flextable()
 
 test %>%
   dt_create(group = "manufacturer")

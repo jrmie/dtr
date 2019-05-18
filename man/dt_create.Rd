@@ -4,21 +4,21 @@
 \alias{dt_create}
 \title{Create an dt object}
 \usage{
-dt_create(data, group, stat.num = "median", digits = 2,
-  spec.var = NULL, keep.missing = F, compare = T, overall = F)
+dt_create(data, group, stat_num = "median", digits = 2,
+  spec_var = NULL, keep_missing = F, compare = T, overall = F)
 }
 \arguments{
 \item{data}{A data frame which contains only factor or numeric variables.}
 
 \item{group}{Characters. A grouping variable name.}
 
-\item{stat.num}{Characters. Specify which statistics should be provide.}
+\item{stat_num}{Characters. Specify which statistics should be provide.}
 
 \item{digits}{Integer. Specify the number of digits to display.}
 
-\item{spec.var}{A list. Named list of the variables for which it specifies name and digits to display.}
+\item{spec_var}{A list. Named list of the variables for which it specifies name and digits to display.}
 
-\item{keep.missing}{A T/F value. Indicate if statistics should be provide for cases with missing grouping variable.}
+\item{keep_missing}{A T/F value. Indicate if statistics should be provide for cases with missing grouping variable.}
 
 \item{compare}{A T/F value. Indicate if a statistical comparison should be added.}
 
