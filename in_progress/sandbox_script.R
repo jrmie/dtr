@@ -17,10 +17,13 @@ head(mpg) %>%
                               "salut" = 1, "salut" = 1, "salut" = 1,
                               "salut" = 1, "salut" = 1))
 
+t$table
+t$raw_stat$numeric
+t$compare$fct
 
-test %>%
+t <- test %>%
   dt_create(group = manufacturer, spec_var = list(cyl = list(name = "cylinder"), hwy = list(name = "highwaytohell"))) %>%
-  dt_to_html()
+  dt_to_flextable()
 
 q <- chisq.test(test$manufacturer, test$cyl)
 class(q)

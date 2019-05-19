@@ -105,6 +105,11 @@ dt_to_html <- function(x, title = NULL, font_size = NULL){
 
 dt_to_flextable <- function(x, title = NULL, font_size = NULL){
 
+  if (!requireNamespace("flextable", quietly = TRUE)) {
+    stop("Package \"flextable\" needed to save the table in .docx (Microsoft Word). Please install it.",
+         call. = FALSE)
+  }
+
   # vector of alignement
   align = print_align(x)
   # select rows to indent
