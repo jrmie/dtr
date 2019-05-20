@@ -17,7 +17,7 @@ test <- mpg %>%
 ```
 
 ```{r}
-epitable(test, group = "manufacturer", keep.missing = T) %>%
-  epitable_to_html(title = "Voici un titre pour le tableau")
+dt_create(test, group = "manufacturer") %>%
+  dt_to_flextable()
 ```
 

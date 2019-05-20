@@ -1,20 +1,16 @@
-#' Render an dt object in latex format
-#' @param x A dt object returned by the \code{create_dt()} function
-#' @param title A title to the table.
+#' Render a dt object in LaTeX format
+#' @param x A dt object returned by the \code{dt_create()} function
+#' @param title A title as charcters for the table.
 #' @param font_size A numeric value to set the font size.
 #' @examples
-#' data <- ggplot2::mpg %>%
-#'    select(manufacturer, displ, cyl, cty, hwy) %>%
-#'    filter(manufacturer %in% c("audi", "chevrolet", "dodge", "ford")) %>%
+#'dt_create(data, group = treatment, stat_num = "mean") %>%
+#'  dt_to_latex(title = "Compare treated and untreated individuals")
 #'
-#' data %>% epitable(group = cyl) %>%
-#'    epitable_to_latex(title = "Compare characteristics of manufacturer", save = T)
-
 
 dt_to_latex <- function(x, title = NULL, font_size = NULL){
 
   align = print_align(x)
-  indent = which(!x$table$variable %in% x$options$var.names$name)
+  indent = which(!x$table$variable %in% x$options$var_names$name)
   header = print_header(x)
 
   # use kable and kableExtra
@@ -32,22 +28,19 @@ dt_to_latex <- function(x, title = NULL, font_size = NULL){
   return(tbl)
 }
 
-#' Render an epitable x in html format
-#' @param x An epitable x returned by the \code{epitable()} function
-#' @param title A character string to add a title to the table.
+#' Render a dt object in HTML format
+#' @param x An dt object returned by the \code{dt_create()} function
+#' @param title A title as charcters for the table.
 #' @param font_size A numeric value to set the font size.
 #' @examples
-#' data <- ggplot2::mpg %>%
-#'    select(manufacturer, displ, cyl, cty, hwy) %>%
-#'    filter(manufacturer %in% c("audi", "chevrolet", "dodge", "ford"))
+#'dt_create(data, group = treatment, stat_num = "mean") %>%
+#'  dt_to_html(title = "Compare treated and untreated individuals")
 #'
-#' data %>% epitable(group = cyl) %>%
-#'    epitable_to_html(title = "Compare characteristics of manufacturer", save = T)
 
 dt_to_html <- function(x, title = NULL, font_size = NULL){
 
   align = print_align(x)
-  indent = which(!x$table$variable %in% x$options$var.names$name)
+  indent = which(!x$table$variable %in% x$options$var_names$name)
   header = print_header(x)
 
   # use knitr and kableExtra to make the table
@@ -91,24 +84,26 @@ dt_to_html <- function(x, title = NULL, font_size = NULL){
   return(tbl)
 }
 
-#' Render an epitable x in a word document
-#' @param x An epitable x returned by the \code{epitable()} function
-#' @param title A character string to add a title to the table.
+#' Render a dt object in a word document
+#' @param x A dt object returned by the \code{dt_create()} function
+#' @param title A title as charcters for the table.
 #' @param font_size A numeric value to set the font size.
 #' @examples
-#' data <- ggplot2::mpg %>%
-#'    select(manufacturer, displ, cyl, cty, hwy) %>%
-#'    filter(manufacturer %in% c("audi", "chevrolet", "dodge", "ford"))
+#'dt_create(data, group = treatment, stat_num = "mean") %>%
+#'  dt_to_flextable(title = "Compare treated and untreated individuals")
 #'
-#' data %>% epitable(group = cyl) %>%
-#'    epitable_to_word(title = "Compare characteristics of manufacturer")
 
 dt_to_flextable <- function(x, title = NULL, font_size = NULL){
+
+  if (!requireNamespace("flextable", quietly = TRUE)) {
+    stop("Package \"flextable\" needed to save the table in .docx (Microsoft Word). Please install it.",
+         call. = FALSE)
+  }
 
   # vector of alignement
   align = print_align(x)
   # select rows to indent
-  indent = which(!x$table$variable %in% x$options$var.names$name)
+  indent = which(!x$table$variable %in% x$options$var_names$name)
   header_df <- tibble::tibble(col_keys = names(x$table),
                       name = rep(names(print_header(x)), print_header(x)))
 

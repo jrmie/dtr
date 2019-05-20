@@ -3,7 +3,7 @@ test <- dplyr::storms %>%
   filter(!category == "-1") %>%
   mutate(category = fct_drop(category, "-1"))
 
-test <- mpg %>%
+test <- ggplot2::mpg %>%
   select(manufacturer, displ, cyl, cty, hwy) %>%
   filter(manufacturer %in% c("audi", "dodge", "ford")) %>%
   #filter(cyl %in% c(4,6)) %>%
@@ -17,11 +17,27 @@ head(mpg) %>%
                               "salut" = 1, "salut" = 1, "salut" = 1,
                               "salut" = 1, "salut" = 1))
 
+t$table
+t$raw_stat$numeric
+t$compare$fct
+
+t <- test %>%
+  dt_create(group = manufacturer, spec_var = list(cyl = list(name = "cylinder"), hwy = list(name = "highwaytohell"))) %>%
+  dt_to_flextable()
+
+q <- chisq.test(test$manufacturer, test$cyl)
+class(q)
+typeof(q)
+
+print(b$compare$fct$test)
+
+
+#%>%
+ # dt_to_flextable()
 
 test %>%
-  dt_create(group = "manufacturer", spec.var = list(cyl = list(name = "helloworld"))) %>%
-  dt_to_flextable() %>%
-  dt_save(file = salut)
+  dt_create(group = "manufacturer")
+
 
 attr(test2, "format")
 
@@ -103,12 +119,13 @@ doc <- read_docx()
 doc <- body_add_flextable(doc, value = ft)
 print(doc, target = "test.docx")
 
+test %>% group_by(cyl) %>% groups() %>% levels(test$.)
 
 
-
-fun_test <- function(data, ...){
-  vars <- ensyms(...)
-  data %>% select(!!!vars)
+fun_test <- function(group){
+  group <- ensym(group)
+  qq_show(!!group)
 }
 
-test %>% fun_test(hwy, "manufacturer", cyl)
+
+fun_test(group = manufacturer)
