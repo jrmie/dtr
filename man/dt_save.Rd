@@ -7,14 +7,16 @@
 dt_save(x, file)
 }
 \arguments{
-\item{x}{A dt object rendered by one of those functions \code{dt_to_html()}, \code{dt_to_latex()} or \code{dt_to_flextable()}}
+\item{x}{A dt object rendered by one of those functions \code{dt_to_html()},
+\code{dt_to_latex()} or \code{dt_to_flextable()}}
 
 \item{file}{A file name without extension file specified.}
 
-\item{path}{A path to directory where file should be save. If NULL (default) file will be save in the working directory.}
+\item{path}{A path to directory where file should be save. If NULL (default)
+file will be save in the current working directory.}
 }
 \value{
-A pdf, html or docx file
+pdf, html or docx file
 }
 \description{
 \code{dt_save} export a rendered dt object in the corresponding file format

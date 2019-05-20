@@ -2,25 +2,22 @@
 % Please edit documentation in R/render.R
 \name{dt_to_html}
 \alias{dt_to_html}
-\title{Render an epitable x in html format}
+\title{Render a dt object in HTML format}
 \usage{
 dt_to_html(x, title = NULL, font_size = NULL)
 }
 \arguments{
-\item{x}{An epitable x returned by the \code{epitable()} function}
+\item{x}{An dt object returned by the \code{dt_create()} function}
 
-\item{title}{A character string to add a title to the table.}
+\item{title}{A title as charcters for the table.}
 
 \item{font_size}{A numeric value to set the font size.}
 }
 \description{
-Render an epitable x in html format
+Render a dt object in HTML format
 }
 \examples{
-data <- ggplot2::mpg \%>\%
-   select(manufacturer, displ, cyl, cty, hwy) \%>\%
-   filter(manufacturer \%in\% c("audi", "chevrolet", "dodge", "ford"))
+dt_create(data, group = treatment, stat_num = "mean") \%>\%
+ dt_to_html(title = "Compare treated and untreated individuals")
 
-data \%>\% epitable(group = cyl) \%>\%
-   epitable_to_html(title = "Compare characteristics of manufacturer", save = T)
 }

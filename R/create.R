@@ -1,11 +1,13 @@
 #' Create a dt object
 #'
 #' @param data A data frame which contains only factor or numeric variables.
-#' @param group The name of the grouping variable.
-#' @param stat_num Characters. Specify which statistics should be provide.
+#' @param group A variable name as characters or symbol which define groups.
+#' @param stat_num Characters. Specify the statistic to describe numeric
+#'   variables, "median" (default) provides median, first and third quartiles, "mean"
+#'   provides mean and standard deviation.
 #' @param digits Integer. Specify the number of digits to display.
 #' @param keep_missing Logical. If FALSE (default) observations which have a
-#'   missing value for the grouping variable are exclude to the dataset.
+#'   missing value for the grouping variable are exclude from the dataset.
 #'   Otherwise an extra group named "Missing data" will be add to the table to
 #'   describe this observations.
 #' @param compare Logical. If TRUE (default) a statistical comparison is added
@@ -13,13 +15,14 @@
 #' @param overall Logical. If TRUE an extra column with the statistics of the
 #'   entire dataset will be added to the table.
 #' @param spec_var List. A named list of the variables for which you want
-#'   specify row name or number of digits to display. Each variable-named
-#'   element need to be a named list (as name and digit). If provides here, the
-#'   specific digit argument overwrite the digits argument. The order of the
-#'   variable-named element define the order of rows in the table.
+#'   specify row name, number of digits to display or just ordering the rows.
+#'   Each variable-named element need to be a named list (with name and digit
+#'   elements) or NULL. If provides here, the specific digit argument overwrite
+#'   the general digits argument. The order of the variable-named element define
+#'   the order of rows in the table.
 #' @examples
-#' dt_create(, )
-#' @return A dt object which is a list
+#' dt_create(data, group = treatment, stat_num = "mean")
+#' @return A dt object (a list)
 
 dt_create <- function(data,
                       group,
@@ -129,15 +132,21 @@ dt_create <- function(data,
   )
 }
 
-#' Save to .pdf, .html or .docx
+#'Save to .pdf, .html or .docx
 #'
 #'\code{dt_save} export a rendered dt object in the corresponding file format
 #'
-#' @param x A dt object rendered by one of those functions \code{dt_to_html()}, \code{dt_to_latex()} or \code{dt_to_flextable()}
-#' @param file A file name without extension file specified.
-#' @param path A path to directory where file should be save. If NULL (default) file will be save in the working directory.
-#' @return A pdf, html or docx file
-#'
+#'@param x A dt object rendered by one of those functions \code{dt_to_html()},
+#'  \code{dt_to_latex()} or \code{dt_to_flextable()}
+#'@param file A file name without extension file specified.
+#'@param path A path to directory where file should be save. If NULL (default)
+#'  file will be save in the current working directory.
+#'@exemples
+#'dt_create(data, group = treatment, stat_num = "mean") %>%
+#'  dt_to_latex(title = "Compare treated and untreated individuals") %>%
+#'  dt_save(file = "table_treatment_groups")
+#'@return pdf, html or docx file
+
 dt_save <- function(x, file){
 
   # tidyeval
