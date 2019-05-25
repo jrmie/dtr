@@ -25,7 +25,7 @@
 #' @return A dt object (a list)
 
 dt_create <- function(data,
-                      group,
+                      group = NULL,
                       stat_num = "median",
                       digits = 2,
                       spec_var = NULL,
@@ -33,23 +33,50 @@ dt_create <- function(data,
                       compare = T,
                       overall = F){
 
+  # NSE -----------------------------------------------------------------------
+  data_n <- rlang::ensym(data)
+  group <- rlang::enexpr(group)
 
-  # NSE Tidyeval ------------
-
-  group <- rlang::ensym(group)
-
-  # Check data --------------
+  # Check arguments and NSE ---------------------------------------------------
 
   # check classes of variables
   for (i in data){
     if(!is.numeric(i) & !is.factor(i)){
-      stop("Variables must be numerics or factors")
+      stop(paste0("Variables must be numerics or factors. ", i, " is not."))
     }
   }
 
-  # check argument stat_num
+  # check stat_num provide is correct
   if (!(stat_num %in% c("median", "mean"))){
     stop("The argument 'stat_num' must be 'median' or 'mean'")
+  }
+
+  # Define the grouping variable depending possibilities ----------------------
+
+  if(!is.null(group)){
+    if(is.grouped_df(data))
+      message(paste0("Grouping by '", group_vars(data),
+                     "' has been dropped to be replace by '",
+                     as.character(group),"'"))
+  } else {
+    if(!is.grouped_df(data))
+      stop(call. = F,
+           paste0("'", as.character(data_n),
+                  "' is not a grouped dataframe. Please provide a group argument"))
+    if(length(group_vars(data)) > 1)
+      warning(call. = F,
+              paste0("'", as.character(data_n),
+                      "' has more than one grouping variable. '",
+                      last(group_vars(data)), "' is used to makes the groups."))
+    group <- last(groups(data))
+  }
+
+  # Makes a vector of levels for the following functions ----------------------
+  grp_levels <- levels(pull(data, !!group))
+  if(length(grp_levels) > 5){ # warns if too much levels for readibility
+    warning(call. = F,
+            "The grouping variable has ", length(grp_levels),
+            " levels. I think you should not compare more than 5 groups.")
   }
 
 
@@ -62,10 +89,7 @@ dt_create <- function(data,
     data <- filter(data, !is.na(!!group))
   }
 
-  # groups the data and set a vector of levels
   data <- group_by(data, !!group)
-  grp_levels <- levels(pull(data, !!group))
-
   # set vector names of numerics and factor variables
   var_num <- data %>% select_if(is.numeric) %>% tbl_nongroup_vars()
   var_fct <- data %>% select_if(is.factor) %>% tbl_nongroup_vars()
@@ -130,40 +154,4 @@ dt_create <- function(data,
                              overall = overall)
   )
   )
-}
-
-#'Save to .pdf, .html or .docx
-#'
-#'\code{dt_save} export a rendered dt object in the corresponding file format
-#'
-#'@param x A dt object rendered by one of those functions \code{dt_to_html()},
-#'  \code{dt_to_latex()} or \code{dt_to_flextable()}
-#'@param file A file name without extension file specified.
-#'@param path A path to directory where file should be save. If NULL (default)
-#'  file will be save in the current working directory.
-#'@exemples
-#'dt_create(data, group = treatment, stat_num = "mean") %>%
-#'  dt_to_latex(title = "Compare treated and untreated individuals") %>%
-#'  dt_save(file = "table_treatment_groups")
-#'@return pdf, html or docx file
-
-dt_save <- function(x, file){
-
-  # tidyeval
-  file <- rlang::as_string(rlang::ensym(file))
-
-  # save a flextable in a word document
-  if (class(x) == "flextable"){
-    doc <- officer::read_docx()
-    doc <- flextable::body_add_flextable(doc, value = x)
-    print(doc, target = paste0(file, ".docx"))
-
-    # save a latex table in pdf document
-  } else if(attr(x, "format") == "latex") {
-    x %>% kableExtra::save_kable(paste0(file, ".pdf"))
-
-    # save a html table in html page
-  } else if(attr(x, "format") == "html") {
-    x %>% kableExtra::save_kable(paste0(file, ".html"))
-  }
 }
