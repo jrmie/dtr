@@ -33,11 +33,9 @@ dt_create <- function(data,
                       compare = T,
                       overall = F){
 
-  # NSE -----------------------------------------------------------------------
+  # Check arguments and NSE ---------------------------------------------------
   data_n <- rlang::ensym(data)
   group <- rlang::enexpr(group)
-
-  # Check arguments and NSE ---------------------------------------------------
 
   # check classes of variables
   for (i in data){
@@ -80,7 +78,7 @@ dt_create <- function(data,
   }
 
 
-  # Tidy the data -----------
+  # Tidy the data -------------------------------------------------------------
 
   # handle missing group variable or not
   if (keep_missing){
@@ -89,30 +87,30 @@ dt_create <- function(data,
     data <- filter(data, !is.na(!!group))
   }
 
+  # to get grouped data
   data <- group_by(data, !!group)
+
   # set vector names of numerics and factor variables
-  var_num <- data %>% select_if(is.numeric) %>% tbl_nongroup_vars()
-  var_fct <- data %>% select_if(is.factor) %>% tbl_nongroup_vars()
+  var_num <- select_if(data, is.numeric) %>% tbl_nongroup_vars()
+  var_fct <- select_if(data, is.factor) %>% tbl_nongroup_vars()
 
+  # Describes the data --------------------------------------------------------
 
-  # Describes the data ------
-
-  # summarises numerics and factor
+  # to summarises numerics and factor
   df_raw <- list(numeric = describe_numeric(data, var_num, stat_num),
                  factor = describe_factor(data, var_fct))
 
 
-  # Compare the data --------
+  # Compare the data ----------------------------------------------------------
+
   if(compare){
     list_compare <- list(fct = compare_factor(data, group, var_fct),
-                         num = compare_numeric(data, group, grp_levels, var_num)
-    )
+                         num = compare_numeric(data, group, grp_levels, var_num))
   } else {
     list_compare <- NULL
   }
 
-
-  # Set how to display ------
+  # to set how to display informations ----------------------------------------
 
   tbl_num <- display_numeric(df_raw$numeric, group, grp_levels, var_num, stat_num, spec_var, digits)
   tbl_fct <- display_factor(df_raw$factor, grp_levels, var_fct)
@@ -120,25 +118,22 @@ dt_create <- function(data,
 
   # add a pvalue column
   if(compare){
-    tbl <- display_pvalue(list_compare) %>%
-      right_join(tbl, by = "variable")
+    tbl <- display_pvalue(list_compare) %>% right_join(tbl, by = "variable")
   }
 
-  # set orders of column and rows
+  # to set orders of column and rows
   order <- display_order(data, grp_levels, var_fct, spec_var, compare)
-  tbl <- tbl %>%
-    select(order$cols) %>%
-    arrange(match(variable, order$rows))
+  tbl <- select(tbl, order$cols) %>% arrange(match(variable, order$rows))
 
-  # set var names
+  # to set var names
   var_names <- display_names(var_num, var_fct, spec_var)
-  tbl <- tbl %>%
-    mutate(variable = ifelse(variable %in% var_names$variable,
-                             var_names$name[match(variable, var_names$variable)],
-                             variable)
+  tbl <- mutate(tbl,
+                variable = ifelse(variable %in% var_names$variable,
+                                  var_names$name[match(variable, var_names$variable)],
+                                  variable)
     )
 
-  # Object returned ---------
+  # Object returned -----------------------------------------------------------
   return(list(table = tbl,
               raw_stat = df_raw,
               compare = list_compare,
@@ -151,7 +146,5 @@ dt_create <- function(data,
                              var_names = var_names,
                              keep_missing = keep_missing,
                              compare = compare,
-                             overall = overall)
-  )
-  )
+                             overall = overall)))
 }
