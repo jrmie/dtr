@@ -33,6 +33,7 @@
 #'@name dtr
 #'
 #'@importFrom magrittr %>%
+#'@importFrom stats aov median quantile sd t.test var.test
 #'@import tidyr
 #'@import dplyr
 #'@import kableExtra

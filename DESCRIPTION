@@ -2,8 +2,8 @@ Package: dtr
 Type: Package
 Title: Descriptive Tables with R in the Field of Epidemiology
 Version: 0.0.0.9000
-Author@R: person("Jeremie", "Lespinasse", email = "jeremie.lespinasse@outlook.com",
-  role = c("aut", "cre")
+Authors@R: person("Jeremie", "Lespinasse", email = "jeremie.lespinasse@outlook.com",
+  role = c("aut", "cre"))
 Description: Quickly inspect grouped data producing descriptive tables. It
     provides several statistics for the entire dataset or groups. Statistical
     comparisons either paramatric or not can be added between groups. Then it
@@ -14,6 +14,8 @@ Encoding: UTF-8
 LazyData: true
 Imports:
     tidyr (>= 0.8.3),
+    dplyr,
+    magrittr,
     purrr (>= 0.3.2),
     rlang (>= 0.3.3),
     kableExtra (>= 1.1.0)
