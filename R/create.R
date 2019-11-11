@@ -112,8 +112,18 @@ dt_create <- function(data,
 
   # to set how to display informations ----------------------------------------
 
-  tbl_num <- display_numeric(df_raw$numeric, group, grp_levels, var_num, stat_num, spec_var, digits)
-  tbl_fct <- display_factor(df_raw$factor, grp_levels, var_fct)
+  if (!is.null(df_raw$numeric)) {
+    tbl_num <- display_numeric(df_raw$numeric, group, grp_levels, var_num, stat_num, spec_var, digits)
+  } else {
+    tbl_num <- NULL
+  }
+
+  if (!is.null(df_raw$factor)) {
+    tbl_fct <- display_factor(df_raw$factor, grp_levels, var_fct)
+  } else {
+    tbl_fct <- NULL
+  }
+
   tbl <- bind_rows(tbl_num, tbl_fct)
 
   # add a pvalue column

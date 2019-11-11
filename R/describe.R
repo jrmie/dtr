@@ -26,7 +26,11 @@ describe_numeric <- function(data, var_num, stat_num){
     mutate(!!group := paste0(!!group, "_", stat)) %>%
     select(-stat)
 
-  return(df)
+  if (nrow(df) == 0) {
+    return(NULL)
+  } else {
+    return(df)
+  }
 }
 
 # to describe factor variables
@@ -51,5 +55,9 @@ describe_factor <- function(data, var_fct){
         mutate_at(vars(variable), as.character)
     })
 
-  return(df)
+  if (nrow(df) == 0) {
+    return(NULL)
+  } else {
+    return(df)
+  }
 }
