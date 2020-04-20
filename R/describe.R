@@ -5,7 +5,6 @@
 describe_numeric <- function(data, var_num, stat_num){
 
   df <- select(data, var_num, group_cols())
-  print(is.grouped_df(df))
   group <- sym(group_vars(data))
 
   #summarise
@@ -26,7 +25,7 @@ describe_numeric <- function(data, var_num, stat_num){
     mutate(!!group := paste0(!!group, "_", stat)) %>%
     select(-stat)
 
-  if (nrow(df) == 0) {
+  if (ncol(df) == 1) {
     return(NULL)
   } else {
     return(df)
@@ -55,7 +54,7 @@ describe_factor <- function(data, var_fct){
         mutate_at(vars(variable), as.character)
     })
 
-  if (nrow(df) == 0) {
+  if (ncol(df) == 1) {
     return(NULL)
   } else {
     return(df)

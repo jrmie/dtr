@@ -3,7 +3,6 @@
 \docType{package}
 \name{dtr}
 \alias{dtr}
-\alias{dtr-package}
 \title{dtr: Descriptive Table R}
 \description{
 The purpose of the package is to quickly get a numerical description of a set

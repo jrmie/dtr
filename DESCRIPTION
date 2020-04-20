@@ -19,7 +19,7 @@ Imports:
     purrr (>= 0.3.2),
     rlang (>= 0.3.3),
     kableExtra (>= 1.1.0)
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.1
 Suggests: 
     testthat,
     flextable (>= 0.5.4)

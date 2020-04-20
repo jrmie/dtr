@@ -4,8 +4,16 @@
 \alias{dt_create}
 \title{Create a dt object}
 \usage{
-dt_create(data, group = NULL, stat_num = "median", digits = 2,
-  spec_var = NULL, keep_missing = F, compare = T, overall = F)
+dt_create(
+  data,
+  group = NULL,
+  stat_num = "median",
+  digits = 2,
+  spec_var = NULL,
+  keep_missing = F,
+  compare = T,
+  overall = F
+)
 }
 \arguments{
 \item{data}{A data frame which contains only factor or numeric variables.}
